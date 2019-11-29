@@ -4,28 +4,20 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
 using Xamarin.Forms;
-
-using XamarinTestTask.Models;
 using XamarinTestTask.Services;
 
 namespace XamarinTestTask.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        public IDataStore<Item> DataStore => DependencyService.Get<IDataStore<Item>>();
+        private IAppService _appService;
 
-        bool isBusy = false;
-        public bool IsBusy
+        protected IAppService AppService
         {
-            get { return isBusy; }
-            set { SetProperty(ref isBusy, value); }
-        }
-
-        string title = string.Empty;
-        public string Title
-        {
-            get { return title; }
-            set { SetProperty(ref title, value); }
+            get
+            {
+                return _appService ?? (_appService = DependencyService.Get<IAppService>());
+            }
         }
 
         protected bool SetProperty<T>(ref T backingStore, T value,

@@ -1,25 +1,21 @@
-﻿using System;
-using Xamarin.Forms;
-using Xamarin.Forms.Xaml;
+﻿using Xamarin.Forms;
 using XamarinTestTask.Services;
-using XamarinTestTask.Views;
 
 namespace XamarinTestTask
 {
     public partial class App : Application
     {
-
         public App()
         {
             InitializeComponent();
 
-            DependencyService.Register<MockDataStore>();
             MainPage = new AppShell();
         }
 
         protected override void OnStart()
         {
-            // Handle when your app starts
+            DependencyService.Register<IAppService, AppService>();
+            DependencyService.Get<IAppService>().MainPage = MainPage;
         }
 
         protected override void OnSleep()

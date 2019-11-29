@@ -6,67 +6,58 @@
        mc:Ignorable="d"
        xmlns:local="clr-namespace:XamarinTestTask.Views"
        Title="XamarinTestTask"
-       x:Class="XamarinTestTask.AppShell">
+       x:Class="XamarinTestTask.AppShell"
+       FlyoutIsPresented="False">
 
-    <!-- 
-        Styles and Resources 
-    -->
     <Shell.Resources>
         <ResourceDictionary>
-            <Color x:Key="NavigationPrimary">#2196F3</Color>
+            <Color x:Key="NavigationPrimary">#7AC34E</Color>
             <Style x:Key="BaseStyle" TargetType="Element">
                 <Setter Property="Shell.BackgroundColor" Value="{StaticResource NavigationPrimary}" />
                 <Setter Property="Shell.ForegroundColor" Value="White" />
                 <Setter Property="Shell.TitleColor" Value="White" />
                 <Setter Property="Shell.DisabledColor" Value="#B4FFFFFF" />
                 <Setter Property="Shell.UnselectedColor" Value="#95FFFFFF" />
-                <Setter Property="Shell.TabBarBackgroundColor" Value="{StaticResource NavigationPrimary}" />
+                <Setter Property="Shell.TabBarBackgroundColor" Value="White" />
                 <Setter Property="Shell.TabBarForegroundColor" Value="White"/>
-                <Setter Property="Shell.TabBarUnselectedColor" Value="#95FFFFFF"/>
-                <Setter Property="Shell.TabBarTitleColor" Value="White"/>
+                <Setter Property="Shell.TabBarUnselectedColor" Value="Black"/>
+                <Setter Property="Shell.TabBarTitleColor" Value="#5786EC"/>
             </Style>
             <Style TargetType="TabBar" BasedOn="{StaticResource BaseStyle}" />
         </ResourceDictionary>
     </Shell.Resources>
 
-    <!-- Your Pages -->
     <TabBar>
-        <Tab Title="Browse" Icon="tab_feed.png">
-            <ShellContent ContentTemplate="{DataTemplate local:ItemsPage}" />
+        <Tab Title="Profile" Icon="avatar.png">
+            <ShellContent>
+                <ContentPage>
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="Profile"/>
+                    </StackLayout>
+                </ContentPage>
+            </ShellContent>
         </Tab>
-        <Tab Title="About" Icon="tab_about.png">
-            <ShellContent ContentTemplate="{DataTemplate local:AboutPage}" />
+        <Tab Title="Messages" Icon="chat.png">
+            <ShellContent>
+                <ContentPage>
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="Messages"/>
+                    </StackLayout>
+                </ContentPage>
+            </ShellContent>
+        </Tab>
+        <Tab Title="Matches" Icon="matches.png">
+            <ShellContent>
+                <ContentPage>
+                    <StackLayout VerticalOptions="Center" HorizontalOptions="Center">
+                        <Label Text="Matches"/>
+                    </StackLayout>
+                </ContentPage>
+            </ShellContent>
+        </Tab>
+        <Tab Title="Calendar" Icon="calendar.png">
+            <ShellContent ContentTemplate="{DataTemplate local:CalendarPage}" />
         </Tab>
     </TabBar>
-
-    <!-- Optional Templates 
-    // These may be provided inline as below or as separate classes.
-
-    // This header appears at the top of the Flyout.
-    <Shell.FlyoutHeaderTemplate>
-        <DataTemplate>
-            <Grid>ContentHere</Grid>
-        </DataTemplate>
-    </Shell.FlyoutHeaderTemplate>
-
-    // ItemTemplate is for ShellItems as displayed in a Flyout
-    <Shell.ItemTemplate>
-        <DataTemplate>
-            <ContentView>
-                Bindable Properties: Title, Icon
-            </ContentView>
-        </DataTemplate>
-    </Shell.ItemTemplate>
-
-    // MenuItemTemplate is for MenuItems as displayed in a Flyout
-    <Shell.MenuItemTemplate>
-        <DataTemplate>
-            <ContentView>
-                Bindable Properties: Text, Icon
-            </ContentView>
-        </DataTemplate>
-    </Shell.MenuItemTemplate>
-
-    -->
 
 </Shell>

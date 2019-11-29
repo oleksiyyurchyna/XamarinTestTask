@@ -3,5 +3,6 @@
   <PropertyGroup>
     <SelectedDevice>oreo_8_1_api_27</SelectedDevice>
     <DefaultDevice>oreo_8_1_api_27</DefaultDevice>
+    <AndroidDesignerPreferredTheme>Theme.DeviceDefault</AndroidDesignerPreferredTheme>
   </PropertyGroup>
 </Project>
