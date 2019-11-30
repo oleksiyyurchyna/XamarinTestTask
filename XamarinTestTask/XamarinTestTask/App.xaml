@@ -6,6 +6,24 @@
              mc:Ignorable="d"
              x:Class="XamarinTestTask.App">
     <Application.Resources>
-        
+        <Color x:Key="MainGreenColor">#7AC34E</Color>
+        <Color x:Key="GreyColor">#ACACAC</Color>
+
+        <Style x:Key="GreenLabel" TargetType="Label">
+            <Setter Property="TextColor" Value="{StaticResource MainGreenColor}"/>
+        </Style>
+
+        <Style x:Key="GreenBoldLabel" TargetType="Label" BasedOn="{StaticResource GreenLabel}">
+            <Setter Property="FontAttributes" Value="Bold"/>
+        </Style>
+
+        <Style x:Key="LargeGreenBoldLabel" TargetType="Label" BasedOn="{StaticResource GreenBoldLabel}">
+            <Setter Property="FontSize" Value="Large"/>
+        </Style>
+
+        <Style x:Key="MediumGreenBoldLabel" TargetType="Label" BasedOn="{StaticResource GreenBoldLabel}">
+            <Setter Property="FontSize" Value="Medium"/>
+        </Style>
+
     </Application.Resources>
 </Application>

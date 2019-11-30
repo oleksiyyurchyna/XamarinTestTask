@@ -1,0 +1,214 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:viewmodels="clr-namespace:XamarinTestTask.ViewModels"
+             xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             mc:Ignorable="d"
+             x:Class="XamarinTestTask.Views.CalendarPage">
+    
+    <Shell.TitleView>
+        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Label Grid.Column="1" Margin="5" Text="{Binding Title}" TextColor="White" FontSize="Medium" FontAttributes="Bold"
+                   HorizontalOptions="Center" VerticalOptions="Center"/>
+
+            <Label Grid.Column="2" Margin="15" Text="Archive" TextColor="#FFD600" FontSize="Medium"
+                   HorizontalOptions="End" VerticalOptions="Center">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding ArchiveTappedCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+
+        </Grid>
+    </Shell.TitleView>
+    
+    <ContentPage.BindingContext>
+        <viewmodels:CalendarViewModel/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="70"/>
+                <RowDefinition Height="80"/>
+                <RowDefinition Height="60"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Label Grid.Row="0" Margin="20" HorizontalOptions="Start"  Style="{StaticResource LargeGreenBoldLabel}" Text="&lt;">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding PreviousMonthTappedCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
+            <Label Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" Style="{StaticResource LargeGreenBoldLabel}" Text="December, 2019"/>
+            <Label Grid.Row="0" Margin="20" HorizontalOptions="End"    Style="{StaticResource LargeGreenBoldLabel}" Text="&gt;"/>
+            <StackLayout Grid.Row="1">
+                <CollectionView 
+                            ItemsSource="{Binding VisibleDates}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Horizontal" Span="1" SnapPointsType="Mandatory"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <Label HorizontalOptions="Center" Text="Mo" FontAttributes="Bold"/>
+                                <Frame CornerRadius="5" Margin="0" Padding="5" 
+                                                           HasShadow="True" BackgroundColor="White">
+                                    <StackLayout VerticalOptions="Center">
+                                        <Label HorizontalOptions="Center" Text="1"/>
+                                    </StackLayout>
+                                </Frame>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+            <StackLayout Grid.Row="2" HorizontalOptions="FillAndExpand"
+                         BackgroundColor="Azure">
+                <CollectionView ItemsSource="{Binding Statuses}">
+                    <CollectionView.ItemsLayout>
+                        <GridItemsLayout Orientation="Horizontal" Span="1"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <Label Text="{Binding}"/>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+            <StackLayout Grid.Row="3" HorizontalOptions="FillAndExpand">
+                <CollectionView ItemsSource="{Binding Proposals}">
+                    <CollectionView.ItemsLayout>
+                        <LinearItemsLayout Orientation="Vertical"/>
+                    </CollectionView.ItemsLayout>
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout BackgroundColor="#F4F4F4">
+                                <Grid HorizontalOptions="FillAndExpand" BackgroundColor="White"
+                                      Margin="0, 10, 0, 0" Padding="10, 0, 10, 5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="3*"/>
+                                        <ColumnDefinition Width="20"/>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="2.5*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <Frame Grid.Column="3" WidthRequest="80" CornerRadius="2" Padding="0"
+                                           BackgroundColor="{StaticResource MainGreenColor}">
+                                        <Label Text="Application"
+                                           HorizontalTextAlignment="Center" TextColor="White" FontAttributes="Bold"/>
+                                    </Frame>
+
+                                    <Label Grid.Column="0" Grid.Row="1" 
+                                           Style="{StaticResource MediumGreenBoldLabel}" 
+                                           Text="Certified dental assistant"/>
+                                    <StackLayout Grid.Column="0" Grid.Row="2" Orientation="Horizontal">
+                                        <Label Text="Rate:" TextColor="{StaticResource GreyColor}"/>
+                                        <Label Text="25 $/hours" FontAttributes="Bold"/>
+                                    </StackLayout>
+                                    <StackLayout Grid.Column="0" Grid.Row="3" Grid.RowSpan="2"
+                                                 Orientation="Horizontal">
+                                        <Image VerticalOptions="Start" WidthRequest="16" HeightRequest="16">
+                                            <Image.Source>
+                                                <FileImageSource File="location.png"/>
+                                            </Image.Source>
+                                        </Image>
+                                        <Label Text="445 Danforth Ave, Toronto, ON M4K 1P2" 
+                                               LineBreakMode="TailTruncation" FontAttributes="Bold" MaxLines="2"/>
+                                    </StackLayout>
+
+                                    <BoxView Grid.Row="5" Grid.ColumnSpan="4" WidthRequest="1" HeightRequest="1"
+                                             Color="{StaticResource GreyColor}"/>
+
+                                    <StackLayout Grid.Column="0" Grid.Row="6" Orientation="Horizontal"
+                                                 VerticalOptions="Center">
+                                        <Image VerticalOptions="Center" WidthRequest="16" HeightRequest="16">
+                                            <Image.Source>
+                                                <FileImageSource File="calendar.png"/>
+                                            </Image.Source>
+                                        </Image>
+                                        <Label VerticalOptions="Center" TextColor="{StaticResource GreyColor}" Text="Job date:"/>
+                                    </StackLayout>
+
+                                    <abstractions:CircleImage Grid.Row="1" Grid.Column="2"
+                                                              HeightRequest="15" WidthRequest="15"
+                                                              Aspect="AspectFill">
+                                        <abstractions:CircleImage.Source>
+                                            <FileImageSource File="photo.jpg"/>
+                                        </abstractions:CircleImage.Source>
+                                    </abstractions:CircleImage>
+                                    <Label Grid.Column="3" Grid.Row="1"
+                                           Style="{StaticResource MediumGreenBoldLabel}" 
+                                           Text="Certified dental assistant"/>
+
+                                    <StackLayout Grid.Column="3" Grid.Row="2" Orientation="Horizontal">
+                                        <Label Text="stars" TextColor="{StaticResource GreyColor}"/>
+                                        <Label Text="(3)"/>
+                                    </StackLayout>
+
+                                    <StackLayout Grid.Column="3" Grid.Row="3" Orientation="Horizontal">
+                                        <Label Text="No Shows:" TextColor="{StaticResource GreyColor}"/>
+                                        <Label Text="5"/>
+                                    </StackLayout>
+
+                                    <StackLayout Grid.Column="2" Grid.Row="4" Orientation="Horizontal">
+                                        <Label Text="Age:" TextColor="{StaticResource GreyColor}"/>
+                                        <Label Text="32"/>
+                                    </StackLayout>
+
+                                    <StackLayout Grid.Column="3" Grid.Row="4" Orientation="Horizontal">
+                                        <Label Text="Years of exp.:" TextColor="{StaticResource GreyColor}"/>
+                                        <Label Text="7"/>
+                                    </StackLayout>
+
+                                    <StackLayout Grid.Row="6" Grid.Column="2" Grid.ColumnSpan="2"
+                                                 HeightRequest="60">
+                                        <CollectionView ItemsSource="{Binding JobDates}">
+                                            <CollectionView.ItemsLayout>
+                                                <GridItemsLayout Orientation="Horizontal" Span="1" 
+                                                                 SnapPointsType="Mandatory"
+                                                                 HorizontalItemSpacing="5"/>
+                                            </CollectionView.ItemsLayout>
+                                            <CollectionView.ItemTemplate>
+                                                <DataTemplate>
+                                                    <StackLayout>
+                                                        <Frame CornerRadius="5" Margin="0" Padding="5" 
+                                                           HasShadow="True" BackgroundColor="White">
+                                                            <StackLayout VerticalOptions="Center">
+                                                                <Label HorizontalOptions="Center" Text="Mo" FontAttributes="Bold"/>
+                                                                <Label HorizontalOptions="Center" Text="10/07"/>
+                                                            </StackLayout>
+                                                        </Frame>
+                                                    </StackLayout>
+                                                </DataTemplate>
+                                            </CollectionView.ItemTemplate>
+                                        </CollectionView>
+                                    </StackLayout>
+
+                                </Grid>
+                            </StackLayout>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </StackLayout>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

@@ -3,25 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 
-using Xamarin.Forms;
-using XamarinTestTask.Services;
-
 namespace XamarinTestTask.ViewModels
 {
     public class BaseViewModel : INotifyPropertyChanged
     {
-        private IAppService _appService;
-
-        protected IAppService AppService
-        {
-            get
-            {
-                return _appService ?? (_appService = DependencyService.Get<IAppService>());
-            }
-        }
-
-        public string Title { get; set; }
-
         protected bool SetProperty<T>(ref T backingStore, T value,
             [CallerMemberName]string propertyName = "",
             Action onChanged = null)

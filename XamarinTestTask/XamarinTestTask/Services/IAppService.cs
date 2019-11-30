@@ -1,4 +1,5 @@
-﻿using Xamarin.Forms;
+﻿using System.Threading.Tasks;
+using Xamarin.Forms;
 
 namespace XamarinTestTask.Services
 {
@@ -6,6 +7,6 @@ namespace XamarinTestTask.Services
     {
         Page MainPage { get; set; }
 
-        void DisplayAlert(string title, string message, string action);
+        Task DisplayAlert(string title, string message, string action);
     }
 }
