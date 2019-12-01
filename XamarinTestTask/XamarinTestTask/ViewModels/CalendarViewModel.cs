@@ -11,6 +11,8 @@ namespace XamarinTestTask.ViewModels
 {
     public class CalendarViewModel : BasePageViewModel
     {
+        #region Fields
+
         private ICommand _archiveTappedCommand;
         private ICommand _previousMonthTappedCommand;
         private ICommand _nextMonthTappedCommand;
@@ -20,37 +22,22 @@ namespace XamarinTestTask.ViewModels
         private StatusViewModel _selectedStatus;
         private DateProposalsViewModel _selectedDate;
 
+        #endregion
+
+        #region Constructors
+
         public CalendarViewModel()
         {
             Title = "Calendar";
 
-            Statuses = new ObservableCollection<StatusViewModel>()
-            {
-                new StatusViewModel("Pending", (Color)Application.Current.Resources["PendingColor"]),
-                new StatusViewModel("Active", (Color)Application.Current.Resources["ActiveColor"]),
-                new StatusViewModel("Completed", (Color)Application.Current.Resources["CompletedColor"]),
-            };
-            SelectedStatus = Statuses.First();
-
+            LoadStatuses();
             LoadVisibleDates(DateTime.Today);
+            LoadProposals();
         }
 
-        private void LoadVisibleDates(DateTime newDate)
-        {
-            VisibleDates.Clear();
+        #endregion
 
-            var dates = new List<DateProposalsViewModel>();
-            for (int i = 1; i <= DateTime.DaysInMonth(newDate.Year, newDate.Month); i++)
-            {
-                VisibleDates.Add(new DateProposalsViewModel(
-                    new System.DateTime(newDate.Year, newDate.Month, i),
-                    new Random().Next(0, 100) > 60,
-                    new Random().Next(0, 100) > 80,
-                    new Random().Next(0, 100) > 90));
-            }
-
-            SelectedDate = VisibleDates.SingleOrDefault(x => x.Day == newDate.Day) ?? VisibleDates.First();
-        }
+        #region Properties
 
         public ICommand ArchiveTappedCommand
         {
@@ -94,11 +81,7 @@ namespace XamarinTestTask.ViewModels
         public ObservableCollection<DateProposalsViewModel> VisibleDates { get; set; } = new ObservableCollection<DateProposalsViewModel>();
         public ObservableCollection<StatusViewModel> Statuses { get; set; }
 
-        public ObservableCollection<ProposalViewModel> Proposals { get; set; } = new ObservableCollection<ProposalViewModel>() 
-        { 
-            new ProposalViewModel(), 
-            new ProposalViewModel() 
-        };
+        public ObservableCollection<ProposalViewModel> Proposals { get; set; } = new ObservableCollection<ProposalViewModel>();
 
         public StatusViewModel SelectedStatus
         {
@@ -145,7 +128,47 @@ namespace XamarinTestTask.ViewModels
                 return $"{(new DateTimeFormatInfo()).GetMonthName(SelectedDate.Date.Month)}, {SelectedDate.Date.Year}";
             }
         }
-        
+
+        #endregion
+
+        #region Methods
+
+        private void LoadStatuses()
+        {
+            Statuses = new ObservableCollection<StatusViewModel>()
+            {
+                new StatusViewModel("Pending", (Color)Application.Current.Resources["PendingColor"]),
+                new StatusViewModel("Active", (Color)Application.Current.Resources["ActiveColor"]),
+                new StatusViewModel("Completed", (Color)Application.Current.Resources["CompletedColor"]),
+            };
+            SelectedStatus = Statuses.First();
+        }
+
+        private void LoadVisibleDates(DateTime newDate)
+        {
+            VisibleDates.Clear();
+
+            var dates = new List<DateProposalsViewModel>();
+            for (int i = 1; i <= DateTime.DaysInMonth(newDate.Year, newDate.Month); i++)
+            {
+                VisibleDates.Add(new DateProposalsViewModel(
+                    new System.DateTime(newDate.Year, newDate.Month, i),
+                    new Random().Next(0, 100) > 60,
+                    new Random().Next(0, 100) > 80,
+                    new Random().Next(0, 100) > 90));
+            }
+
+            SelectedDate = VisibleDates.SingleOrDefault(x => x.Day == newDate.Day) ?? VisibleDates.First();
+        }
+
+        private void LoadProposals()
+        {
+            for (int i = 0; i < 5; i++)
+            {
+                Proposals.Add(new ProposalViewModel());
+            }
+        }
+
         private async Task Archive()
         {
             await AppService.DisplayAlert("Info", "Archived", "OK");
@@ -178,5 +201,7 @@ namespace XamarinTestTask.ViewModels
 
             SelectedStatus = selectedStatus;
         }
+
+        #endregion
     }
 }
