@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using XamarinTestTask.Enums;
 
 namespace XamarinTestTask.ViewModels
 {
@@ -8,6 +9,7 @@ namespace XamarinTestTask.ViewModels
         public ProposalViewModel()
         {
             var random = new Random();
+            Status = (ProposalStatus)random.Next(0, 3);
             Rate = random.Next(10, 40);
             Rating = random.Next(1,5);
             RatingCount = random.Next(5,20);
@@ -15,12 +17,14 @@ namespace XamarinTestTask.ViewModels
             Age = random.Next(25,50);
             YearsOfExperience = random.Next(5,15);
 
-            for (int i = 0; i < random.Next(1, 5); i++)
+            for (int i = 0; i < random.Next(1, 7); i++)
             {
-                var date = DateTime.Today.AddDays(random.Next(1,30));
+                var date = new DateTime(DateTime.Today.Year, DateTime.Today.Month, random.Next(1, 30));
                 JobDates.Add(new DateProposalsViewModel(date));
             }   
         }
+
+        public ProposalStatus Status { get; set; }
 
         public string ProposalType { get; set; } = "Application";
         public string JobTitle { get; set; } = "Certified dental assistant";

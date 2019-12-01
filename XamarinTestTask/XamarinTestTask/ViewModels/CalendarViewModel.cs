@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace XamarinTestTask.ViewModels
 {
@@ -82,7 +83,7 @@ namespace XamarinTestTask.ViewModels
         public ObservableCollection<StatusViewModel> Statuses { get; set; }
 
         public ObservableCollection<ProposalViewModel> Proposals { get; set; } = new ObservableCollection<ProposalViewModel>();
-
+        
         public StatusViewModel SelectedStatus
         {
             get { return _selectedStatus; }
@@ -152,10 +153,7 @@ namespace XamarinTestTask.ViewModels
             for (int i = 1; i <= DateTime.DaysInMonth(newDate.Year, newDate.Month); i++)
             {
                 VisibleDates.Add(new DateProposalsViewModel(
-                    new System.DateTime(newDate.Year, newDate.Month, i),
-                    new Random().Next(0, 100) > 60,
-                    new Random().Next(0, 100) > 80,
-                    new Random().Next(0, 100) > 90));
+                    new System.DateTime(newDate.Year, newDate.Month, i)));
             }
 
             SelectedDate = VisibleDates.SingleOrDefault(x => x.Day == newDate.Day) ?? VisibleDates.First();
@@ -166,6 +164,27 @@ namespace XamarinTestTask.ViewModels
             for (int i = 0; i < 5; i++)
             {
                 Proposals.Add(new ProposalViewModel());
+            }
+
+            var dateStatuses = Proposals.Select(x => new { x.JobDates, x.Status });
+            foreach (var ds in dateStatuses)
+            {
+                foreach (var d in ds.JobDates)
+                {
+                    var matchingDates = VisibleDates.Where(x => x.Date == d.Date);
+                    switch (ds.Status)
+                    {
+                        case Enums.ProposalStatus.Pending:
+                            matchingDates.ForEach(x => x.AnyPending = true);
+                            break;
+                        case Enums.ProposalStatus.Active:
+                            matchingDates.ForEach(x => x.AnyActive = true);
+                            break;
+                        case Enums.ProposalStatus.Completed:
+                            matchingDates.ForEach(x => x.AnyCompleted = true);
+                            break;
+                    }
+                }
             }
         }
 

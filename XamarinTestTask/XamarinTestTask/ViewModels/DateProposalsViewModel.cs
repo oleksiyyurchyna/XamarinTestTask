@@ -4,6 +4,10 @@ namespace XamarinTestTask.ViewModels
 {
     public class DateProposalsViewModel : SelectableBaseViewModel
     {
+        private bool _anyPending;
+        private bool _anyActive;
+        private bool _anyCompleted;
+
         public DateProposalsViewModel(DateTime day)
             : this(day, false, false, false)
         {
@@ -29,8 +33,8 @@ namespace XamarinTestTask.ViewModels
 
         public string DateShort { get; set; }
 
-        public bool AnyPending { get; set; }
-        public bool AnyActive { get; set; }
-        public bool AnyCompleted { get; set; }
+        public bool AnyPending { get { return _anyPending; } set { SetProperty(ref _anyPending, value); } }
+        public bool AnyActive { get { return _anyActive; } set { SetProperty(ref _anyActive, value); } }
+        public bool AnyCompleted { get { return _anyCompleted; } set { SetProperty(ref _anyCompleted, value); } }
     }
 }
