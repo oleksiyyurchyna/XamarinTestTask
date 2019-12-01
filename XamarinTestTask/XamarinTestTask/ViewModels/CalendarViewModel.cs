@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,8 +13,11 @@ namespace XamarinTestTask.ViewModels
         private ICommand _archiveTappedCommand;
         private ICommand _previousMonthTappedCommand;
         private ICommand _nextMonthTappedCommand;
+        private ICommand _statusItemTappedCommand;
+        private ICommand _dateItemTappedCommand;
 
         private StatusViewModel _selectedStatus;
+        private DateProposalsViewModel _selectedDate;
 
         public CalendarViewModel()
         {
@@ -27,17 +31,24 @@ namespace XamarinTestTask.ViewModels
             };
             SelectedStatus = Statuses.First();
 
-            var dates = new List<DateViewModel>();
-            dates.Add(new DateViewModel(new System.DateTime(2019, 12, 1)));
-            dates.Add(new DateViewModel(new System.DateTime(2019, 12, 2)));
-            dates.Add(new DateViewModel(new System.DateTime(2019, 12, 3)));
-            dates.Add(new DateViewModel(new System.DateTime(2019, 12, 4)));
-            dates.Add(new DateViewModel(new System.DateTime(2019, 12, 5)));
-            dates.Add(new DateViewModel(new System.DateTime(2019, 12, 6)));
-            dates.Add(new DateViewModel(new System.DateTime(2019, 12, 7)));
-            dates.Add(new DateViewModel(new System.DateTime(2019, 12, 8)));
-            dates.Add(new DateViewModel(new System.DateTime(2019, 12, 9)));
-            VisibleDates = new ObservableCollection<DateViewModel>(dates);
+            LoadVisibleDates(DateTime.Today);
+        }
+
+        private void LoadVisibleDates(DateTime newDate)
+        {
+            VisibleDates.Clear();
+
+            var dates = new List<DateProposalsViewModel>();
+            for (int i = 1; i <= DateTime.DaysInMonth(newDate.Year, newDate.Month); i++)
+            {
+                VisibleDates.Add(new DateProposalsViewModel(
+                    new System.DateTime(newDate.Year, newDate.Month, i),
+                    new Random().Next(0, 100) > 60,
+                    new Random().Next(0, 100) > 80,
+                    new Random().Next(0, 100) > 90));
+            }
+
+            SelectedDate = VisibleDates.SingleOrDefault(x => x.Day == newDate.Day) ?? VisibleDates.First();
         }
 
         public ICommand ArchiveTappedCommand
@@ -64,7 +75,22 @@ namespace XamarinTestTask.ViewModels
             }
         }
 
-        public ObservableCollection<DateViewModel> VisibleDates { get; set; }
+        public ICommand StatusItemTappedCommand
+        {
+            get
+            {
+                return _statusItemTappedCommand ?? (_statusItemTappedCommand = new Command(StatusItemTapped));
+            }
+        }
+        public ICommand DateItemTappedCommand
+        {
+            get
+            {
+                return _dateItemTappedCommand ?? (_dateItemTappedCommand = new Command(DateItemTapped));
+            }
+        }
+
+        public ObservableCollection<DateProposalsViewModel> VisibleDates { get; set; } = new ObservableCollection<DateProposalsViewModel>();
         public ObservableCollection<StatusViewModel> Statuses { get; set; }
 
         public ObservableCollection<ProposalViewModel> Proposals { get; set; } = new ObservableCollection<ProposalViewModel>() 
@@ -91,6 +117,34 @@ namespace XamarinTestTask.ViewModels
             }
         }
 
+        public DateProposalsViewModel SelectedDate
+        {
+            get { return _selectedDate; }
+            set
+            {
+                if (_selectedDate != null)
+                {
+                    _selectedDate.IsSelected = false;
+                }
+
+                _selectedDate = value;
+                if (_selectedDate != null)
+                {
+                    _selectedDate.IsSelected = true;
+                }
+
+                OnPropertyChanged(nameof(SelectedMonthTitle));
+            }
+        }
+
+        public string SelectedMonthTitle
+        {
+            get
+            {
+                return $"{SelectedDate.Date.Month.ToString()}, {SelectedDate.Date.Year}";
+            }
+        }
+        
         private async Task Archive()
         {
             await AppService.DisplayAlert("Info", "Archived", "OK");
@@ -98,7 +152,30 @@ namespace XamarinTestTask.ViewModels
 
         private async Task SwitchToMonth(bool isNext)
         {
+            var newDate = isNext ? SelectedDate.Date.AddMonths(1) : SelectedDate.Date.AddMonths(-1);
+            LoadVisibleDates(newDate);
+        }
 
+        private void DateItemTapped(object param)
+        {
+            var selectedDate = param as DateProposalsViewModel;
+            if (selectedDate == null)
+            {
+                return;
+            }
+
+            SelectedDate = selectedDate;
+        }
+
+        private void StatusItemTapped(object param)
+        {
+            var selectedStatus = param as StatusViewModel;
+            if (selectedStatus == null)
+            {
+                return;
+            }
+
+            SelectedStatus = selectedStatus;
         }
     }
 }

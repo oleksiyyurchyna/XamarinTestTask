@@ -6,7 +6,8 @@
              xmlns:viewmodels="clr-namespace:XamarinTestTask.ViewModels"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
              mc:Ignorable="d"
-             x:Class="XamarinTestTask.Views.CalendarPage">
+             x:Class="XamarinTestTask.Views.CalendarPage"
+             x:Name="calendarPage">
     
     <Shell.TitleView>
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
@@ -33,6 +34,16 @@
         <viewmodels:CalendarViewModel/>
     </ContentPage.BindingContext>
 
+    <ContentPage.Resources>
+        <Style x:Key="SelectedBoxViewToWhiteStyle" TargetType="BoxView">
+            <Style.Triggers>
+                <DataTrigger TargetType="BoxView" Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="Color" Value="White"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </ContentPage.Resources>
+
     <ContentPage.Content>
         <Grid HorizontalOptions="FillAndExpand" VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
@@ -47,8 +58,13 @@
                     <TapGestureRecognizer Command="{Binding PreviousMonthTappedCommand}"/>
                 </Label.GestureRecognizers>
             </Label>
-            <Label Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" Style="{StaticResource LargeGreenBoldLabel}" Text="December, 2019"/>
-            <Label Grid.Row="0" Margin="20" HorizontalOptions="End" Style="{StaticResource LargeGreenBoldLabel}" Text="&gt;"/>
+            <Label Grid.Row="0" VerticalOptions="Center" HorizontalOptions="Center" Style="{StaticResource LargeGreenBoldLabel}" 
+                   Text="{Binding SelectedMonthTitle}"/>
+            <Label Grid.Row="0" Margin="20" HorizontalOptions="End" Style="{StaticResource LargeGreenBoldLabel}" Text="&gt;">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer Command="{Binding NextMonthTappedCommand}"/>
+                </Label.GestureRecognizers>
+            </Label>
             <StackLayout Grid.Row="1">
                 <CollectionView ItemsSource="{Binding VisibleDates}">
                     <CollectionView.ItemsLayout>
@@ -67,9 +83,9 @@
                                            Text="{Binding DayOfTheWeek}" Margin="15"/>
                                 </StackLayout>
 
-                                <Frame Grid.Row="1" CornerRadius="5" Margin="5" Padding="0" 
+                                <Frame Grid.Row="1" CornerRadius="5" Margin="5" Padding="0"
                                        HasShadow="True" BackgroundColor="White">
-                                    <Grid>
+                                    <Grid WidthRequest="45">
                                         <Grid.RowDefinitions>
                                             <RowDefinition Height="*"/>
                                             <RowDefinition Height="Auto"/>
@@ -77,18 +93,41 @@
 
                                         <Label Grid.Row="0" Grid.RowSpan="2" Text="{Binding Day}" 
                                                VerticalOptions="Center" HorizontalOptions="Center" 
-                                               FontAttributes="Bold" Margin="10, 15"/>
+                                               FontAttributes="Bold" Margin="10, 15">
+                                            <Label.Triggers>
+                                                <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
+                                                    <Setter Property="TextColor" Value="White"/>
+                                                </DataTrigger>
+                                            </Label.Triggers>
+                                        </Label>
                                         <StackLayout Grid.Row="1" Orientation="Horizontal" HorizontalOptions="Center" Margin="5">
                                             <BoxView WidthRequest="5" HeightRequest="5" CornerRadius="50" Color="{StaticResource PendingColor}"
-                                                 VerticalOptions="Center" HorizontalOptions="Center"/>
+                                                     VerticalOptions="Center" HorizontalOptions="Center"
+                                                     Style="{StaticResource SelectedBoxViewToWhiteStyle}"
+                                                     IsVisible="{Binding AnyPending}"/>
                                             <BoxView WidthRequest="5" HeightRequest="5" CornerRadius="50" Color="{StaticResource ActiveColor}"
-                                                 VerticalOptions="Center" HorizontalOptions="Center"/>
+                                                 VerticalOptions="Center" HorizontalOptions="Center"
+                                                     Style="{StaticResource SelectedBoxViewToWhiteStyle}"
+                                                     IsVisible="{Binding AnyActive}"/>
                                             <BoxView WidthRequest="5" HeightRequest="5" CornerRadius="50" Color="{StaticResource CompletedColor}"
-                                                 VerticalOptions="Center" HorizontalOptions="Center"/>
+                                                 VerticalOptions="Center" HorizontalOptions="Center"
+                                                     Style="{StaticResource SelectedBoxViewToWhiteStyle}"
+                                                     IsVisible="{Binding AnyCompleted}"/>
                                         </StackLayout>
 
+                                        <Grid.Triggers>
+                                            <DataTrigger TargetType="Grid" Binding="{Binding IsSelected}" Value="True">
+                                                <Setter Property="BackgroundColor" Value="{StaticResource MainGreenColor}"/>
+                                            </DataTrigger>
+                                        </Grid.Triggers>
+                                        
                                     </Grid>
                                 </Frame>
+
+                                <Grid.GestureRecognizers>
+                                    <TapGestureRecognizer Command="{Binding Source={x:Reference Name=calendarPage}, Path=BindingContext.DateItemTappedCommand}" 
+                                                          CommandParameter="{Binding}"/>
+                                </Grid.GestureRecognizers>
                                 
                             </Grid>
                         </DataTemplate>
@@ -96,9 +135,7 @@
                 </CollectionView>
             </StackLayout>
 
-            <CollectionView Grid.Row="2" ItemsSource="{Binding Statuses}" Margin="0, 20, 0, 0"
-                            SelectionMode="Single" 
-                            SelectedItem="{Binding SelectedStatus}">
+            <CollectionView Grid.Row="2" ItemsSource="{Binding Statuses}" Margin="0, 20, 0, 0">
                 <CollectionView.ItemsLayout>
                     <GridItemsLayout Orientation="Vertical" Span="3"/>
                 </CollectionView.ItemsLayout>
@@ -133,28 +170,11 @@
                                 </BoxView.Triggers>
                             </BoxView>
 
-                            <Grid.Style>
-                                <Style TargetType="Grid">
-                                    <Setter Property="VisualStateManager.VisualStateGroups">
-                                        <VisualStateGroupList>
-                                            <VisualStateGroup x:Name="CommonStates">
-                                                <VisualState x:Name="Normal" />
-                                                <VisualState x:Name="Selected">
-                                                    <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="White" />
-                                                    </VisualState.Setters>
-                                                </VisualState>
-                                                <VisualState x:Name="Pressed">
-                                                    <VisualState.Setters>
-                                                        <Setter Property="BackgroundColor" Value="White" />
-                                                    </VisualState.Setters>
-                                                </VisualState>
-                                            </VisualStateGroup>
-                                        </VisualStateGroupList>
-                                    </Setter>
-                                </Style>
-                            </Grid.Style>
-                            
+                            <Grid.GestureRecognizers>
+                                <TapGestureRecognizer Command="{Binding Source={x:Reference Name=calendarPage}, Path=BindingContext.StatusItemTappedCommand}" 
+                                                      CommandParameter="{Binding}"/>
+                            </Grid.GestureRecognizers>
+
                         </Grid>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>
