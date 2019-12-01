@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Globalization;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Input;
@@ -141,7 +142,7 @@ namespace XamarinTestTask.ViewModels
         {
             get
             {
-                return $"{SelectedDate.Date.Month.ToString()}, {SelectedDate.Date.Year}";
+                return $"{(new DateTimeFormatInfo()).GetMonthName(SelectedDate.Date.Month)}, {SelectedDate.Date.Year}";
             }
         }
         

@@ -6,6 +6,7 @@ namespace XamarinTestTask.ViewModels
     {
         public DateProposalsViewModel(DateTime day, bool anyPending, bool anyActive, bool anyCompleted)
         {
+            Date = day;
             Day = day.Day;
             DayOfTheWeek = ((DayOfWeek)day.DayOfWeek).ToString().Substring(0, 2);
 
