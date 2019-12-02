@@ -138,9 +138,9 @@ namespace XamarinTestTask.ViewModels
         {
             Statuses = new ObservableCollection<StatusViewModel>()
             {
-                new StatusViewModel("Pending", (Color)Application.Current.Resources["PendingColor"]),
-                new StatusViewModel("Active", (Color)Application.Current.Resources["ActiveColor"]),
-                new StatusViewModel("Completed", (Color)Application.Current.Resources["CompletedColor"]),
+                new StatusViewModel(Enums.ProposalStatus.Pending, (Color)Application.Current.Resources["PendingColor"]),
+                new StatusViewModel(Enums.ProposalStatus.Active, (Color)Application.Current.Resources["ActiveColor"]),
+                new StatusViewModel(Enums.ProposalStatus.Completed, (Color)Application.Current.Resources["CompletedColor"]),
             };
             SelectedStatus = Statuses.First();
         }

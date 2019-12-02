@@ -1,14 +1,16 @@
-﻿namespace XamarinTestTask.ViewModels
+﻿using XamarinTestTask.Enums;
+
+namespace XamarinTestTask.ViewModels
 {
     public class StatusViewModel : SelectableBaseViewModel
     {
-        public StatusViewModel(string title, Xamarin.Forms.Color color)
+        public StatusViewModel(ProposalStatus status, Xamarin.Forms.Color color)
         {
-            Title = title;
+            Status = status;
             Color = color;
         }
 
-        public string Title { get; private set; }
+        public ProposalStatus Status { get; private set; }
 
         public Xamarin.Forms.Color Color { get; set; }
     }

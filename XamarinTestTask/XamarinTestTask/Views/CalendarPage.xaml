@@ -5,6 +5,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:viewmodels="clr-namespace:XamarinTestTask.ViewModels"
              xmlns:abstractions="clr-namespace:ImageCircle.Forms.Plugin.Abstractions;assembly=ImageCircle.Forms.Plugin"
+             xmlns:xforms="clr-namespace:Syncfusion.SfRating.XForms;assembly=Syncfusion.SfRating.XForms"
              mc:Ignorable="d"
              x:Class="XamarinTestTask.Views.CalendarPage"
              x:Name="calendarPage">
@@ -151,7 +152,7 @@
                                 <BoxView WidthRequest="5" HeightRequest="5" CornerRadius="50" 
                                          Color="{Binding Color}"
                                          VerticalOptions="Center" HorizontalOptions="Center"/>
-                                <Label Text="{Binding Title}" FontAttributes="Bold" 
+                                <Label Text="{Binding Status}" FontAttributes="Bold" 
                                        TextColor="Black">
                                     <Label.Triggers>
                                         <DataTrigger TargetType="Label" Binding="{Binding IsSelected}" Value="True">
@@ -256,7 +257,15 @@
                                            Text="{Binding WorkerTitle}"/>
 
                                     <StackLayout Grid.Column="3" Grid.Row="2" Orientation="Horizontal">
-                                        <Label Text="stars" TextColor="{StaticResource GreyColor}"/>
+                                        <xforms:SfRating ItemCount="5" Value="{Binding Rating}" ReadOnly="True"
+                                                         ItemSize="15" ItemSpacing="3" VerticalOptions="Center">
+                                            <xforms:SfRating.RatingSettings>
+                                                <xforms:SfRatingSettings RatedFill="{StaticResource MainGreenColor}"
+                                                                         RatedStroke="{StaticResource MainGreenColor}"
+                                                                         UnRatedFill="White"
+                                                                         UnRatedStroke="{StaticResource MainGreenColor}"/>
+                                            </xforms:SfRating.RatingSettings>
+                                        </xforms:SfRating>
                                         <Label Text="{Binding RatingInfo}"/>
                                     </StackLayout>
 
