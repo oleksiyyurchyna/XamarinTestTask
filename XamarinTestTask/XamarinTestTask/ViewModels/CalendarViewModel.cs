@@ -23,6 +23,8 @@ namespace XamarinTestTask.ViewModels
         private StatusViewModel _selectedStatus;
         private DateProposalsViewModel _selectedDate;
 
+        private List<ProposalViewModel> _proposals = new List<ProposalViewModel>();
+
         #endregion
 
         #region Constructors
@@ -82,7 +84,15 @@ namespace XamarinTestTask.ViewModels
         public ObservableCollection<DateProposalsViewModel> VisibleDates { get; set; } = new ObservableCollection<DateProposalsViewModel>();
         public ObservableCollection<StatusViewModel> Statuses { get; set; }
 
-        public ObservableCollection<ProposalViewModel> Proposals { get; set; } = new ObservableCollection<ProposalViewModel>();
+        public ObservableCollection<ProposalViewModel> Proposals
+        {
+            get
+            {
+                return new ObservableCollection<ProposalViewModel>(
+                    _proposals.Where(x => x.JobDates.Any(jd => jd.Date == SelectedDate.Date) && 
+                                          x.Status == SelectedStatus.Status));
+            }
+        }
         
         public StatusViewModel SelectedStatus
         {
@@ -99,6 +109,8 @@ namespace XamarinTestTask.ViewModels
                 {
                     _selectedStatus.IsSelected = true;
                 }
+
+                OnPropertyChanged(nameof(Proposals));
             }
         }
 
@@ -119,6 +131,7 @@ namespace XamarinTestTask.ViewModels
                 }
 
                 OnPropertyChanged(nameof(SelectedMonthTitle));
+                OnPropertyChanged(nameof(Proposals));
             }
         }
 
@@ -163,10 +176,10 @@ namespace XamarinTestTask.ViewModels
         {
             for (int i = 0; i < 5; i++)
             {
-                Proposals.Add(new ProposalViewModel());
+                _proposals.Add(new ProposalViewModel());
             }
 
-            var dateStatuses = Proposals.Select(x => new { x.JobDates, x.Status });
+            var dateStatuses = _proposals.Select(x => new { x.JobDates, x.Status });
             foreach (var ds in dateStatuses)
             {
                 foreach (var d in ds.JobDates)
@@ -186,6 +199,8 @@ namespace XamarinTestTask.ViewModels
                     }
                 }
             }
+
+            OnPropertyChanged(nameof(Proposals));
         }
 
         private async Task Archive()
@@ -197,6 +212,7 @@ namespace XamarinTestTask.ViewModels
         {
             var newDate = isNext ? SelectedDate.Date.AddMonths(1) : SelectedDate.Date.AddMonths(-1);
             LoadVisibleDates(newDate);
+            LoadProposals();
         }
 
         private void DateItemTapped(object param)

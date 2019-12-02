@@ -182,7 +182,8 @@
             </CollectionView>
             
             <StackLayout Grid.Row="3" HorizontalOptions="FillAndExpand">
-                <CollectionView ItemsSource="{Binding Proposals}">
+                <CollectionView ItemsSource="{Binding Proposals}"
+                                EmptyView="There is no proposal matching selected criterias">
                     <CollectionView.ItemsLayout>
                         <LinearItemsLayout Orientation="Vertical"/>
                     </CollectionView.ItemsLayout>
