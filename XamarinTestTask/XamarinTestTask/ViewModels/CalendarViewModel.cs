@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Input;
 using Xamarin.Forms;
 using Xamarin.Forms.Internals;
+using XamarinTestTask.Services;
 
 namespace XamarinTestTask.ViewModels
 {
@@ -174,10 +175,8 @@ namespace XamarinTestTask.ViewModels
 
         private void LoadProposals()
         {
-            for (int i = 0; i < 5; i++)
-            {
-                _proposals.Add(new ProposalViewModel());
-            }
+            var proposals = DependencyService.Get<IProposalManager>().GetProposals();
+            proposals.Select(x => new ProposalViewModel(x)).ForEach(_proposals.Add);
 
             var dateStatuses = _proposals.Select(x => new { x.JobDates, x.Status });
             foreach (var ds in dateStatuses)

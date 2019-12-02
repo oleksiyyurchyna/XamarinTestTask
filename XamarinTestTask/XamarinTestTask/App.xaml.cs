@@ -16,6 +16,8 @@ namespace XamarinTestTask
         {
             DependencyService.Register<IAppService, AppService>();
             DependencyService.Get<IAppService>().MainPage = MainPage;
+
+            DependencyService.Register<IProposalManager, ProposalManager>();
         }
 
         protected override void OnSleep()
